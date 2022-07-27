@@ -18,13 +18,14 @@ router.post('/movies', celebrate({
     thumbnail: Joi.string().required().regex(regex),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-  }),
-  params: Joi.object().keys({
     movieId: Joi.string().hex().required(),
   }),
+  // params: Joi.object().keys({
+  //   movieId: Joi.string().hex().required(),
+  // }),
 }), createMovie);
 
-router.delete('/movies/_id', celebrate({
+router.delete('/movies/:movieId', celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().hex().required(),
   }),

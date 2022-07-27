@@ -12,6 +12,7 @@ const routerMovie = require('./routes/movies');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
+// const { NAME_DB } = process.env;
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use(errorLogger);
 mongoose.connect('mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
 });
+
+// NODE_ENV === 'production' ? NAME_DB : 'mongodb://localhost:27017/devmoviesdb'
 
 app.use(errors());
 app.use(defaultErrorHandler);
