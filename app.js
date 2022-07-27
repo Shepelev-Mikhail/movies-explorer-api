@@ -2,19 +2,21 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const defaultErrorHandler = require('./middlewares/defaultErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
-const routerLogin = require('./routes/login');
-const routerRegister = require('./routes/register');
-const routerUser = require('./routes/users');
-const routerMovie = require('./routes/movies');
+const router = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
+const { DEV_NAME_DB } = require('./utils/config');
+const { pageNotFound } = require('./utils/constants');
 
-const { PORT = 3000 } = process.env;
-// const { NAME_DB } = process.env;
+const { PORT = 3000, NODE_ENV, NAME_DB } = process.env;
 
 const app = express();
+app.set('trust proxy', 2);
+app.get('/ip', (request, response) => response.send(request.ip));
+
+app.use(helmet());
 
 // прием данных
 app.use(bodyParser.json());
@@ -22,22 +24,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.use('/', routerLogin);
-app.use('/', routerRegister);
-app.use('/', auth, routerUser);
-app.use('/', auth, routerMovie);
+router(app);
 
 app.use((req, res, next) => {
-  next(new NotFoundError('Page not found'));
+  next(new NotFoundError(pageNotFound));
 });
 
 app.use(errorLogger);
 
-mongoose.connect('mongodb://localhost:27017/moviesdb', {
+mongoose.connect(NODE_ENV === 'production' ? NAME_DB : DEV_NAME_DB, {
   useNewUrlParser: true,
 });
-
-// NODE_ENV === 'production' ? NAME_DB : 'mongodb://localhost:27017/devmoviesdb'
 
 app.use(errors());
 app.use(defaultErrorHandler);

@@ -2,6 +2,12 @@ const Movie = require('../models/movie');
 const ValidError = require('../errors/ValidError');
 const NotFoundError = require('../errors/NotFoundError');
 const AccessError = require('../errors/AccessError');
+const {
+  incorrectDataToCreate,
+  notOwner,
+  incorrectData,
+  recordNotFound,
+} = require('../utils/constants');
 
 // создание фильма
 module.exports.createMovie = (req, res, next) => {
@@ -35,7 +41,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.status(201).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidError('Переданы некорректные данные для создания записи'));
+        next(new ValidError(incorrectDataToCreate));
         return;
       }
       next(err);
@@ -61,18 +67,18 @@ module.exports.deleteMovie = (req, res, next) => {
     .orFail(new Error('NotFoundError'))
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        next(new AccessError('Вы не являетесь владельцем записи'));
+        next(new AccessError(notOwner));
         return;
       }
       removeMovie();
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ValidError('Переданы некорректные данные записи'));
+        next(new ValidError(incorrectData));
         return;
       }
       if (err.message === 'NotFoundError') {
-        next(new NotFoundError('Запись с указанным id не найдена'));
+        next(new NotFoundError(recordNotFound));
         return;
       }
       next(err);

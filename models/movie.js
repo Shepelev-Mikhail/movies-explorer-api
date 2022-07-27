@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-
-const regex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/;
+const { regex } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema({
   country: {

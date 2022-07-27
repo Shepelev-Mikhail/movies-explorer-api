@@ -1,10 +1,12 @@
+const { defaultErrorCode } = require('../utils/constants');
+
 const defaultErrorHandler = (err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const { statusCode = defaultErrorCode, message } = err;
 
   res
     .status(statusCode)
     .send({
-      message: statusCode === 500
+      message: statusCode === defaultErrorCode
         ? 'На сервере произошла ошибка'
         : message,
     });

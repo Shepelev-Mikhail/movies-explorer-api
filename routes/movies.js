@@ -1,8 +1,9 @@
 const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const { createMovie, findSaveMovie, deleteMovie } = require('../controllers/movies');
+const { regex } = require('../utils/constants');
 
-const regex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/;
+// const regex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/;
 
 router.get('/movies', findSaveMovie);
 

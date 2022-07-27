@@ -3,18 +3,23 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ValidError = require('../errors/ValidError');
 const ConflictEmailError = require('../errors/ConflictEmailError');
+const { SECRET_KEY } = require('../utils/config');
+const {
+  notProvided,
+  emailBusy,
+  incorrectUserData,
+} = require('../utils/constants');
 
 require('dotenv').config();
 
-const SECRET_KEY = 'dev_secret_key';
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // создание пользователя
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
 
-  if (!email || !password) {
-    next(new ValidError('Не указан Email или пароль'));
+  if (!name || !email || !password) {
+    next(new ValidError(notProvided));
     return;
   }
 
@@ -30,11 +35,11 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictEmailError('Email занят'));
+        next(new ConflictEmailError(emailBusy));
         return;
       }
       if (err.name === 'ValidationError') {
-        next(new ValidError('Переданы некорректные данные пользователя'));
+        next(new ValidError(incorrectUserData));
         return;
       }
       next(err);
@@ -45,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new ValidError('Не указан Email или пароль'));
+    next(new ValidError(notProvided));
     return;
   }
 
@@ -82,7 +87,7 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidError('Переданы некорректные данные пользователя'));
+        next(new ValidError(incorrectUserData));
         return;
       }
       next(err);
