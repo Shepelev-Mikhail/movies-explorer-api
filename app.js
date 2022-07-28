@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+const cors = require('cors');
 const defaultErrorHandler = require('./middlewares/defaultErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
@@ -10,11 +11,24 @@ const NotFoundError = require('./errors/NotFoundError');
 const { DEV_NAME_DB } = require('./utils/config');
 const { pageNotFound } = require('./utils/constants');
 
+const options = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://shepelev.movies.nomoredomains.xyz',
+    'https://api.shepelev.movies.nomoredomains.xyz',
+    'http://shepelev.movies.nomoredomains.xyz',
+    'http://api.shepelev.movies.nomoredomains.xyz',
+    'https://Shepelev-Mikhail.github.io',
+  ],
+  credentials: true, // эта опция позволяет устанавливать куки
+};
+
 const { PORT = 3000, NODE_ENV, NAME_DB } = process.env;
 
 const app = express();
-app.set('trust proxy', 2);
-app.get('/ip', (request, response) => response.send(request.ip));
+
+app.use('*', cors(options));
 
 app.use(helmet());
 
