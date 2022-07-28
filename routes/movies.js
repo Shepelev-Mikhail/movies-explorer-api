@@ -3,8 +3,6 @@ const router = require('express').Router();
 const { createMovie, findSaveMovie, deleteMovie } = require('../controllers/movies');
 const { regex } = require('../utils/constants');
 
-// const regex = /(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/;
-
 router.get('/movies', findSaveMovie);
 
 router.post('/movies', celebrate({
@@ -21,9 +19,6 @@ router.post('/movies', celebrate({
     nameEN: Joi.string().required(),
     movieId: Joi.string().hex().required(),
   }),
-  // params: Joi.object().keys({
-  //   movieId: Joi.string().hex().required(),
-  // }),
 }), createMovie);
 
 router.delete('/movies/:movieId', celebrate({
