@@ -24,6 +24,8 @@ const options = {
   credentials: true, // эта опция позволяет устанавливать куки
 };
 
+require('dotenv').config();
+
 const { PORT = 3000, NODE_ENV, NAME_DB } = process.env;
 
 const app = express();

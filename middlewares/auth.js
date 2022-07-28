@@ -3,6 +3,8 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const { SECRET_KEY } = require('../utils/config');
 // const { unauthorized } = require('../utils/constants');
 
+require('dotenv').config();
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
