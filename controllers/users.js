@@ -16,11 +16,6 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    next(new ValidError(notProvided));
-    return;
-  }
-
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
@@ -84,6 +79,10 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((user) => res.status(200).send(user))
     .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictEmailError(emailBusy));
+        return;
+      }
       if (err.name === 'ValidationError') {
         next(new ValidError(incorrectUserData));
         return;

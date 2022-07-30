@@ -16,7 +16,7 @@ module.exports.createMovie = (req, res, next) => {
     director,
     duration,
     year,
-    descritpion,
+    description,
     image,
     trailerLink,
     thumbnail,
@@ -29,7 +29,7 @@ module.exports.createMovie = (req, res, next) => {
     director,
     duration,
     year,
-    descritpion,
+    description,
     image,
     trailerLink,
     thumbnail,
@@ -58,13 +58,13 @@ module.exports.findSaveMovie = (req, res, next) => {
 // удалить фильм
 module.exports.deleteMovie = (req, res, next) => {
   const removeMovie = () => {
-    Movie.findByIdAndRemove(req.params.movieId)
+    Movie.findByIdAndRemove(req.params._id)
       .then((movie) => res.status(200).send(movie))
       .catch(next);
   };
 
-  Movie.findById(req.params.movieId)
-    .orFail(new Error('NotFoundError'))
+  Movie.findById(req.params._id)
+    .orFail(new NotFoundError(recordNotFound))
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
         next(new AccessError(notOwner));
@@ -75,10 +75,6 @@ module.exports.deleteMovie = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidError(incorrectData));
-        return;
-      }
-      if (err.message === 'NotFoundError') {
-        next(new NotFoundError(recordNotFound));
         return;
       }
       next(err);

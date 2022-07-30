@@ -17,6 +17,9 @@ const incorrectUserData = 'Переданы некорректные данны�
 const unauthorized = 'Необходима авторизация';
 const invalidEmailPassword = 'Неправильные почта или пароль';
 const pageNotFound = 'Page not found';
+const serverError = 'На сервере произошла ошибка';
+const incorrectEmail = 'Некорректный емейл';
+const incorrectUrl = 'Некорректная ссылка';
 
 module.exports = {
   validErrorCode,
@@ -36,4 +39,7 @@ module.exports = {
   unauthorized,
   invalidEmailPassword,
   pageNotFound,
+  serverError,
+  incorrectEmail,
+  incorrectUrl,
 };

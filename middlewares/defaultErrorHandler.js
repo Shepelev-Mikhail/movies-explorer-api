@@ -1,4 +1,4 @@
-const { defaultErrorCode } = require('../utils/constants');
+const { defaultErrorCode, serverError } = require('../utils/constants');
 
 const defaultErrorHandler = (err, req, res, next) => {
   const { statusCode = defaultErrorCode, message } = err;
@@ -7,7 +7,7 @@ const defaultErrorHandler = (err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === defaultErrorCode
-        ? 'На сервере произошла ошибка'
+        ? serverError
         : message,
     });
   next();
